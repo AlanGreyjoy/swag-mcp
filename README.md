@@ -1,6 +1,8 @@
 # Swagger/Postman MCP Server
 
-Server that ingests and serves Swagger/OpenAPI specifications and Postman collections as MCP (Model Context Protocol) tools.
+Server that ingests and serves Swagger/OpenAPI specifications and Postman collections as MCP (Model Context Protocol) tools using a **simplified strategic approach**.
+
+Instead of generating hundreds of individual tools for each API endpoint, this server provides **only 4 strategic tools** that allow AI agents to dynamically discover and interact with APIs:
 
 ```bash
 Example prompt:
@@ -9,11 +11,12 @@ Help me generate an axios call using our api mcp. I want to implement updating a
 
 ## Features
 
+- **Strategic Tool Approach**: Only 4 tools instead of hundreds for better AI agent performance
 - **OpenAPI/Swagger Support**: Load OpenAPI 2.0/3.0 specifications from URLs or local files
 - **Postman Collection Support**: Load Postman collection JSON files from URLs or local files
 - **Environment Variables**: Support for Postman environment files
 - **Authentication**: Multiple authentication methods (Basic, Bearer, API Key, OAuth2)
-- **Dynamic Tool Generation**: Automatically generates MCP tools from API specifications
+- **Dynamic API Discovery**: Tools for listing, searching, and getting details about API endpoints
 - **Request Execution**: Execute API requests with proper parameter handling and authentication
 
 ## Security
@@ -73,10 +76,6 @@ The server uses a `config.json` file for configuration. You can specify either O
   },
   "log": {
     "level": "info"
-  },
-  "server": {
-    "port": 3000,
-    "host": "0.0.0.0"
   }
 }
 ```
@@ -100,10 +99,6 @@ The server uses a `config.json` file for configuration. You can specify either O
   },
   "log": {
     "level": "info"
-  },
-  "server": {
-    "port": 3000,
-    "host": "0.0.0.0"
   }
 }
 ```
@@ -134,65 +129,132 @@ The server uses a `config.json` file for configuration. You can specify either O
 - `apiKeyName`: API key parameter name
 - `apiKeyIn`: Where to send API key (`"header"` or `"query"`)
 
-#### Server Configuration
+#### Logging Configuration
 
-- `server.port`: Server port (default: 3000)
-- `server.host`: Server host (default: "0.0.0.0")
 - `log.level`: Logging level (`"debug"`, `"info"`, `"warn"`, `"error"`)
 
 ## Usage
 
-### Starting the Server
+### Starting the MCP Server
+
+The server runs via stdio transport for MCP connections:
 
 ```bash
-# Start the server
-npm start
-# or
-yarn start
+# Start the simplified MCP server via stdio
+./start-mcp.sh
+
+# Or directly with node
+node dist/simple-stdio.js
 
 # For development with auto-reload
-npm run dev
+npm run dev:simple
 # or
-yarn dev
+yarn dev:simple
 ```
 
-### API Endpoints
+### MCP Integration
 
-- `GET /health` - Health check endpoint
-- `GET /sse` - Server-Sent Events endpoint for MCP connections
-- `POST /messages` - MCP message handling endpoint
+This server uses stdio transport and is designed to be used with MCP clients like Claude Desktop. Configure it in your MCP client configuration file.
 
 ## How It Works
 
+### Strategic Tool Approach
+
+Instead of generating hundreds of individual tools for each API endpoint, this server provides **4 strategic tools** that enable dynamic API discovery and interaction:
+
 ### OpenAPI/Swagger Mode
+
+**4 Strategic Tools:**
+
+1. **`list_endpoints`** - List all available API endpoints
+2. **`get_endpoint_details`** - Get detailed information about specific endpoints
+3. **`search_endpoints`** - Search endpoints by keyword
+4. **`make_api_call`** - Execute any API call with proper authentication
+
+**Process:**
 
 1. Loads the OpenAPI specification from the configured URL or file
 2. Parses the specification to extract API endpoints, parameters, and security schemes
-3. Generates MCP tools for each API operation
-4. Handles authentication and parameter validation
+3. Makes endpoint information available through the 4 strategic tools
+4. Handles authentication and parameter validation dynamically
 5. Executes API requests and returns responses
 
 ### Postman Collection Mode
 
+**4 Strategic Tools:**
+
+1. **`list_requests`** - List all available requests in the collection
+2. **`get_request_details`** - Get detailed information about specific requests
+3. **`search_requests`** - Search requests by keyword
+4. **`make_request`** - Execute any request from the collection
+
+**Process:**
+
 1. Loads the Postman collection JSON from the configured URL or file
 2. Optionally loads a Postman environment file for variable substitution
 3. Parses requests, folders, and nested items in the collection
-4. Generates MCP tools for each request in the collection
-5. Handles variable substitution, authentication, and parameter mapping
+4. Makes request information available through the 4 strategic tools
+5. Handles variable substitution, authentication, and parameter mapping dynamically
 6. Executes requests with proper headers, query parameters, and body data
 
-### Generated Tools
+### Benefits of Strategic Tools
 
-Each API operation becomes an MCP tool with:
+- **Better AI Performance**: 4 tools vs hundreds means faster decision making
+- **Dynamic Discovery**: AI agents can explore APIs without knowing endpoints beforehand
+- **Flexible Interaction**: Any endpoint can be called through `make_api_call`/`make_request`
+- **Reduced Overwhelm**: AI agents aren't flooded with tool options
 
-- **Name**: Derived from the operation name or request name
-- **Description**: From the API documentation or request description
-- **Parameters**: Automatically generated schema for:
-  - Path parameters
-  - Query parameters
-  - Request headers
-  - Request body (for POST/PUT/PATCH operations)
-  - Authentication parameters
+## Strategic Tools Reference
+
+### For OpenAPI/Swagger APIs
+
+1. **`list_endpoints`**
+
+   - Lists all available API endpoints with methods and paths
+   - No parameters required
+   - Returns: Array of endpoint summaries
+
+2. **`get_endpoint_details`**
+
+   - Get detailed information about a specific endpoint
+   - Parameters: `method` (GET/POST/etc), `path` (/users/{id}/etc)
+   - Returns: Full endpoint specification with parameters, body schema, responses
+
+3. **`search_endpoints`**
+
+   - Search endpoints by keyword in path, summary, or description
+   - Parameters: `query` (search term)
+   - Returns: Filtered list of matching endpoints
+
+4. **`make_api_call`**
+   - Execute an API call to any endpoint
+   - Parameters: `method`, `path`, `pathParams`, `queryParams`, `headers`, `body`
+   - Returns: API response with status and data
+
+### For Postman Collections
+
+1. **`list_requests`**
+
+   - Lists all available requests in the collection
+   - No parameters required
+   - Returns: Array of request summaries
+
+2. **`get_request_details`**
+
+   - Get detailed information about a specific request
+   - Parameters: `requestId` or `requestName`
+   - Returns: Full request specification
+
+3. **`search_requests`**
+
+   - Search requests by keyword
+   - Parameters: `query` (search term)
+   - Returns: Filtered list of matching requests
+
+4. **`make_request`**
+   - Execute any request from the collection
+   - Parameters: `requestId`, `variables` (for substitution)
+   - Returns: Request response
 
 ### Authentication
 
@@ -205,9 +267,9 @@ The server supports multiple authentication methods:
 
 Authentication can be configured globally or overridden per request.
 
-## Examples
+## Example Configuration
 
-See the `examples/` directory for sample configurations and collection files.
+Your `config.json` should specify either OpenAPI or Postman configuration as shown above.
 
 ### Example Postman Collection Structure
 

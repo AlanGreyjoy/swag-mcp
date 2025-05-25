@@ -2,8 +2,8 @@
   "api": {
     "type": "postman",
     "postman": {
-      "collectionFile": "./ns-postman.json",
-      "environmentFile": "./ns-postman.json",
+      "collectionFile": "./config-postman-example.json",
+      "environmentFile": "./config-postman-example.json",
       "defaultAuth": {
         "type": "bearer",
         "token": "test-token"
