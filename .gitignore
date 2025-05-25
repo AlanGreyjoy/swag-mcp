@@ -26,3 +26,6 @@ coverage/
 logs/
 *.log
 npm-debug.log* 
+
+# Local test files
+ns-openapi.json

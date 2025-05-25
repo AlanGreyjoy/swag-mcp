@@ -51,7 +51,27 @@ yarn install
 npm run build
 # or
 yarn build
+
+# Make the start script executable (Linux/macOS)
+chmod +x start-mcp.sh
 ```
+
+### Quick Setup for Cursor
+
+1. **Clone and build** (commands above)
+2. **Configure** your `config.json` with your API details
+3. **Update paths**: Edit `start-mcp.sh` and change the `cd` path to your installation directory
+4. **Add to Cursor**: Edit `~/.cursor/mcp.json` and add:
+   ```json
+   {
+     "mcpServers": {
+       "postman-swagger-api": {
+         "command": "/full/path/to/your/swag-mcp/start-mcp.sh"
+       }
+     }
+   }
+   ```
+5. **Restart Cursor** and start using the 4 strategic MCP tools!
 
 ## Configuration
 
@@ -154,7 +174,99 @@ yarn dev:simple
 
 ### MCP Integration
 
-This server uses stdio transport and is designed to be used with MCP clients like Claude Desktop. Configure it in your MCP client configuration file.
+This server uses stdio transport and is designed to be used with MCP clients like Claude Desktop or Cursor.
+
+## Installing in Cursor
+
+To use this MCP server with Cursor, you need to add it to your Cursor MCP configuration:
+
+### 1. Locate your Cursor MCP configuration file
+
+The configuration file is located at:
+
+- **Linux/macOS**: `~/.cursor/mcp.json`
+- **Windows**: `%APPDATA%\.cursor\mcp.json`
+
+### 2. Add the MCP server configuration
+
+Edit your `mcp.json` file to include this server:
+
+```json
+{
+  "mcpServers": {
+    "postman-swagger-api": {
+      "command": "/path/to/your/swag-mcp/start-mcp.sh"
+    }
+  }
+}
+```
+
+**⚠️ Important: Change the path!**
+
+Replace `/path/to/your/swag-mcp/start-mcp.sh` with the actual path to your cloned repository. For example:
+
+- **Linux/macOS**: `"/home/username/Documents/swag-mcp/start-mcp.sh"`
+- **Windows**: `"C:\\Users\\username\\Documents\\swag-mcp\\start-mcp.sh"`
+
+### 3. Example complete configuration
+
+```json
+{
+  "mcpServers": {
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--access-token",
+        "your-supabase-token"
+      ]
+    },
+    "postman-swagger-api": {
+      "command": "/home/username/Documents/swag-mcp/start-mcp.sh"
+    }
+  }
+}
+```
+
+### 4. Restart Cursor
+
+After saving the configuration file, restart Cursor for the changes to take effect.
+
+### 5. Verify installation
+
+In Cursor, you should now have access to the 4 strategic MCP tools:
+
+- `list_requests` - List all available requests
+- `get_request_details` - Get detailed request information
+- `search_requests` - Search requests by keyword
+- `make_request` - Execute any API request
+
+### Troubleshooting
+
+If the MCP server fails to start:
+
+1. **Update start-mcp.sh path**: Edit `start-mcp.sh` and change the `cd` path from `/path/to/your/swag-mcp` to your actual installation directory
+2. **Check the path**: Ensure the path in `mcp.json` points to your actual `start-mcp.sh` file
+3. **Check permissions**: Make sure `start-mcp.sh` is executable (`chmod +x start-mcp.sh`)
+4. **Check build**: Ensure you've run `npm run build` to compile the TypeScript files
+5. **Check logs**: Look in Cursor's MCP logs for error messages
+
+### Example Path Updates
+
+If you cloned to `/home/username/Documents/swag-mcp/`, then:
+
+**In `start-mcp.sh`:**
+
+```bash
+cd "/home/username/Documents/swag-mcp"
+```
+
+**In `~/.cursor/mcp.json`:**
+
+```json
+"command": "/home/username/Documents/swag-mcp/start-mcp.sh"
+```
 
 ## How It Works
 
