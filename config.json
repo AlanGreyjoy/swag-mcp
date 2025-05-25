@@ -1,0 +1,20 @@
+{
+  "api": {
+    "type": "postman",
+    "postman": {
+      "collectionFile": "./ns-postman.json",
+      "environmentFile": "./ns-postman.json",
+      "defaultAuth": {
+        "type": "bearer",
+        "token": "test-token"
+      }
+    }
+  },
+  "log": {
+    "level": "debug"
+  },
+  "server": {
+    "port": 9001,
+    "host": "0.0.0.0"
+  }
+}

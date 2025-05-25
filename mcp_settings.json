@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "postman-swagger-api": {
+      "command": "node",
+      "args": ["dist/server.js"],
+      "cwd": "./",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  }
+} 

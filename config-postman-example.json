@@ -1,0 +1,22 @@
+{
+  "api": {
+    "type": "postman",
+    "postman": {
+      "collectionUrl": "https://www.postman.com/collections/632c0cd0-1b6a-4ebb-8b3b-8b3b8b3b8b3b",
+      "collectionFile": "./examples/postman-collection.json",
+      "environmentUrl": "https://www.postman.com/environments/632c0cd0-1b6a-4ebb-8b3b-8b3b8b3b8b3b",
+      "environmentFile": "./examples/postman-environment.json",
+      "defaultAuth": {
+        "type": "bearer",
+        "token": "your-api-token-here"
+      }
+    }
+  },
+  "log": {
+    "level": "info"
+  },
+  "server": {
+    "port": 3000,
+    "host": "0.0.0.0"
+  }
+} 

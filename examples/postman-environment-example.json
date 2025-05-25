@@ -1,0 +1,30 @@
+{
+  "id": "example-environment-id",
+  "name": "Development Environment",
+  "values": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.example.com/v1",
+      "description": "Base URL for the API",
+      "enabled": true
+    },
+    {
+      "key": "apiKey",
+      "value": "your-api-key-here",
+      "description": "API key for authentication",
+      "enabled": true
+    },
+    {
+      "key": "timeout",
+      "value": "5000",
+      "description": "Request timeout in milliseconds",
+      "enabled": true
+    },
+    {
+      "key": "version",
+      "value": "v1",
+      "description": "API version",
+      "enabled": true
+    }
+  ]
+} 
